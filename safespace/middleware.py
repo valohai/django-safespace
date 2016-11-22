@@ -67,7 +67,8 @@ class SafespaceMiddleware(MiddlewareMixin):
 
         context = self._get_context(request, exception)
         status = getattr(settings, 'SAFESPACE_HTTP_STATUS', 406)
-        if request.is_ajax():
+        response_type = self.determine_response_type(request, exception)
+        if response_type == 'json':
             response = JsonResponse(
                 {
                     'code': context['code'],
@@ -142,3 +143,26 @@ class SafespaceMiddleware(MiddlewareMixin):
             'namespace': getattr(resolver_match, 'namespace', None),
         }
         return env
+
+    def determine_response_type(self, request, exception):
+        """
+        Determine what type of response to emit.
+
+        Currently supported: "json" -- anything else will
+        result in the standard HTML template response.
+
+        :param request: Django request that caused the exception
+        :type request: django.http.HttpRequest
+        :param exception: The exception that occurred
+        :type exception: Exception
+        :return: type string
+        :rtype: str
+        """
+        if request.is_ajax():
+            return 'json'
+        if 'application/json' in request.META.get('HTTP_ACCEPT', ''):
+            # Nb: this does not take different q= values into account,
+            #     but that's probably okay.
+            return 'json'
+
+        return 'html'

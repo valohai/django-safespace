@@ -71,3 +71,12 @@ def test_custom_template(client, settings):
     })
     assert response.status_code == 406
     assert b'a foo error occurred, boo' in response.content
+
+
+def test_accept_json(client):
+    response = client.get(
+        '/problem/',
+        HTTP_ACCEPT=('application/json; text/html'),
+    )
+    assert response.status_code == 406
+    assert json.loads(response.content.decode())['error'] == 'A woeful error'
