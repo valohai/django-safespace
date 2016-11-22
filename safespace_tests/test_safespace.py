@@ -29,6 +29,22 @@ def test_custom(client):
     assert b'Oopsy daisy' in response.content
 
 
+def test_raised_404(client):
+    """
+    Test that raised Http404s can be caught.
+    """
+    response = client.get('/404/')
+    assert response.status_code == 406
+
+
+def test_natural_404(client):
+    """
+    Test that "natural" 404s from the router aren't caught by the middleware.
+    """
+    response = client.get('/dsfargeg/')
+    assert response.status_code == 404
+
+
 def test_passthrough(client):
     """
     Test that exceptions that we don't want to catch are passed through.

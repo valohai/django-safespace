@@ -1,5 +1,5 @@
 from django.db import DatabaseError
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 
 from safespace.excs import Problem
 from safespace_tests.excs import CustomError
@@ -25,3 +25,7 @@ def exception_response_view(request):
     exc = Problem('foo')
     exc.response = HttpResponse('nice.')
     raise exc  # You can imagine this is 20 callstack levels deep.
+
+
+def four_oh_four_view(request):
+    raise Http404('No Holy Grail matches the given query.')
