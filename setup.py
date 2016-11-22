@@ -11,7 +11,8 @@ dev_dependencies = [
 if __name__ == '__main__':
     setuptools.setup(
         name='django-safespace',
-        version='0.1.0',
+        description='Exception catching and handling middleware for Django',
+        version='0.2.0',
         url='https://github.com/valohai/django-safespace',
         author='Valohai',
         maintainer='Aarni Koskela',

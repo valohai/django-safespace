@@ -26,6 +26,7 @@ SAFESPACE_TEMPLATE_NAMES = [
 
 SAFESPACE_EXCEPTION_CLASSES = [
     'django.core.exceptions.ValidationError',
+    'django.http.response.Http404',
     'safespace.excs.Problem',
     'safespace_tests.excs.CustomError',
 ]
