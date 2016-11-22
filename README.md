@@ -1,5 +1,9 @@
 # django-safespace
 
+[![Build Status](https://travis-ci.org/valohai/django-safespace.svg?branch=master)](https://travis-ci.org/valohai/django-safespace)
+[![codecov](https://codecov.io/gh/valohai/django-safespace/branch/master/graph/badge.svg)](https://codecov.io/gh/valohai/django-safespace)
+
+
 An exception handling middleware.
 
 ## Installation
