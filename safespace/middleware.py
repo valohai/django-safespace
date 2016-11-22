@@ -1,0 +1,144 @@
+from __future__ import unicode_literals
+
+from django.conf import settings
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
+from django.utils.encoding import force_text
+from django.utils.text import camel_case_to_spaces
+from django.utils.translation import ugettext_lazy as _
+
+from safespace.settings import get_exception_classes
+
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:  # pragma: no cover
+    #  Django < 1.9
+    MiddlewareMixin = object
+
+
+class SafespaceMiddleware(MiddlewareMixin):
+    """The main safespace middleware."""
+
+    def process_exception(self, request, exception):
+        """
+        Possibly process an exception. This is a Django middleware hook.
+
+        :param request: Django request that caused the exception
+        :type request: django.http.HttpRequest
+        :param exception: The exception that occurred
+        :type exception: Exception
+        :return: Response, maybe
+        :rtype: django.http.HttpResponse|None
+        """
+
+        if self.should_handle_exception(request, exception):
+            return self.respond_to_exception(request, exception)
+
+    def should_handle_exception(self, request, exception):
+        """
+        Return true if Safespace should handle the exception.
+        :param request: Django request that caused the exception
+        :type request: django.http.HttpRequest
+        :param exception: The exception that occurred
+        :type exception: Exception
+        :return:
+        """
+        return any(
+            isinstance(exception, klass)
+            for klass in get_exception_classes()
+        )
+
+    def respond_to_exception(self, request, exception):
+        """
+        Get a response for the given request and exception.
+
+        :param request: Django request that caused the exception
+        :type request: django.http.HttpRequest
+        :param exception: The exception that occurred
+        :type exception: Exception
+        :return: Response
+        :rtype: django.http.HttpResponse
+        """
+
+        # If the exception has a `response`, return that.
+        response = getattr(exception, 'response', None)
+        if response and isinstance(response, HttpResponse):
+            return response
+
+        context = self._get_context(request, exception)
+        status = getattr(settings, 'SAFESPACE_HTTP_STATUS', 406)
+        if request.is_ajax():
+            response = JsonResponse(
+                {
+                    'code': context['code'],
+                    'error': context['message'],
+                    'title': context['title'],
+                },
+                status=status,
+            )
+        else:
+            response = render(
+                request=request,
+                template_name=self.get_template_names(
+                    request, exception, context),
+                context=context,
+                status=status,
+                using=getattr(settings, 'SAFESPACE_TEMPLATE_ENGINE', None),
+            )
+        if context['code']:
+            response['X-Error-Code'] = context['code']
+        return response
+
+    def get_template_names(self, request, exception, context):
+        """
+        Get candidate template names for rendering a response.
+
+        This could be overridden in a subclass.
+
+        :param request: Django request that caused the exception
+        :type request: django.http.HttpRequest
+        :param exception: The exception that occurred
+        :type exception: Exception
+        :param context: Precalculated dict of template interpolation variables
+        :type context: dict
+
+        :return: List of template names
+        :rtype: list[str]
+        """
+        return [
+            template_name.format(**context)
+            for template_name
+            in getattr(settings, 'SAFESPACE_TEMPLATE_NAMES', [
+                'safespace/problem.html',
+            ])
+        ]
+
+    def _get_context(self, request, exception):
+        """
+        Get a context dictionary with various context data.
+
+        This is used both for template name determination
+        as well as template rendering.
+
+        :param request: Django request that caused the exception
+        :type request: django.http.HttpRequest
+        :param exception: The exception that occurred
+        :type exception: Exception
+        :returns: Variables
+        :rtype: dict[str, object]
+        """
+        resolver_match = getattr(request, 'resolver_match', None)
+        exc_type = camel_case_to_spaces(exception.__class__.__name__) \
+            .replace(' ', '_')
+        env = {
+            'exception': exception,
+            'message': force_text(exception),
+            'code': getattr(exception, 'code', None),
+            'title': (getattr(exception, 'title', None) or _('Error')),
+            'exc_type': exc_type,
+            'view_name': getattr(resolver_match, 'view_name', None),
+            'url_name': getattr(resolver_match, 'url_name', None),
+            'app_name': getattr(resolver_match, 'app_name', None),
+            'namespace': getattr(resolver_match, 'namespace', None),
+        }
+        return env

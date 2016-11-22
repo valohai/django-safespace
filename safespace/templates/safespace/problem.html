@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+<h1>An error occurred</h1>
+<blockquote>
+    {{ message }}
+</blockquote>
+<hr>
+{% if code %}
+<i>Error code: {{ code }}</i>
+{% endif %}
+</body>
+</html>
