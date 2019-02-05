@@ -1,4 +1,9 @@
+import re
+
 import setuptools
+
+with open('./safespace/__init__.py', 'r') as infp:
+    version = re.search("__version__ = ['\"]([^'\"]+)['\"]", infp.read()).group(1)
 
 dev_dependencies = [
     'flake8',
@@ -12,7 +17,7 @@ if __name__ == '__main__':
     setuptools.setup(
         name='django-safespace',
         description='Exception catching and handling middleware for Django',
-        version='0.2.0',
+        version=version,
         url='https://github.com/valohai/django-safespace',
         author='Valohai',
         maintainer='Aarni Koskela',
