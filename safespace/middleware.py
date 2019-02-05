@@ -65,7 +65,7 @@ class SafespaceMiddleware(MiddlewareMixin):
         if response and isinstance(response, HttpResponse):
             return response
 
-        context = self._get_context(request, exception)
+        context = self.get_context(request, exception)
         response_type = self.determine_response_type(request, exception)
         status = self.get_response_status(request, exception)
         if response_type == 'json':
@@ -128,7 +128,7 @@ class SafespaceMiddleware(MiddlewareMixin):
             ])
         ]
 
-    def _get_context(self, request, exception):
+    def get_context(self, request, exception):
         """
         Get a context dictionary with various context data.
 
