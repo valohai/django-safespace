@@ -4,12 +4,17 @@
 [![codecov](https://codecov.io/gh/valohai/django-safespace/branch/master/graph/badge.svg)](https://codecov.io/gh/valohai/django-safespace)
 
 
-An exception handling middleware.
+An exception handling middleware for Django.
+
+## Requirements
+
+* Django 1.11+
+* Python 3 (may work on Python 2)
 
 ## Installation
 
 * Add `safespace` to your `INSTALLED_APPS`.
-* Add `safespace.middleware.SafespaceMiddleware` to your `MIDDLEWARE_CLASSES`.
+* Add `safespace.middleware.SafespaceMiddleware` to your `MIDDLEWARE` or `MIDDLEWARE_CLASSES`.
 * See below for customization.
 
 ## Usage
