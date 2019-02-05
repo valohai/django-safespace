@@ -6,7 +6,7 @@ INSTALLED_APPS = (
     'safespace_tests',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = MIDDLEWARE_CLASSES = (
     'safespace.middleware.SafespaceMiddleware',
 )
 

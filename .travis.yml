@@ -4,13 +4,11 @@ cache:
     - $HOME/.cache/pip
 language: python
 python:
-  - "2.7"
-  - "3.4"
   - "3.5"
 env:
-  - DJANGO=django~=1.8.0
-  - DJANGO=django~=1.9.0
-  - DJANGO=django~=1.10.0
+  - DJANGO=django~=1.11
+  - DJANGO=django~=2.0
+  - DJANGO=django~=2.1
 install:
   - pip install -U pip pytest>=3.0.0
   - "pip install $DJANGO -e .[dev]"
