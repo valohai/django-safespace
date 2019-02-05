@@ -66,8 +66,8 @@ class SafespaceMiddleware(MiddlewareMixin):
             return response
 
         context = self._get_context(request, exception)
-        status = getattr(settings, 'SAFESPACE_HTTP_STATUS', 406)
         response_type = self.determine_response_type(request, exception)
+        status = self.get_response_status(request, exception)
         if response_type == 'json':
             response = JsonResponse(
                 {
@@ -89,6 +89,20 @@ class SafespaceMiddleware(MiddlewareMixin):
         if context['code']:
             response['X-Error-Code'] = context['code']
         return response
+
+    def get_response_status(self, request, exception):
+        """
+        Get the HTTP status code for the response.
+
+        This could be overridden in a subclass.
+
+        :param request: Django request that caused the exception
+        :type request: django.http.HttpRequest
+        :param exception: The exception that occurred
+        :type exception: Exception
+        """
+
+        return getattr(settings, 'SAFESPACE_HTTP_STATUS', 406)
 
     def get_template_names(self, request, exception, context):
         """
