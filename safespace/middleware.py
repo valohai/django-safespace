@@ -3,17 +3,12 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.utils.deprecation import MiddlewareMixin
 from django.utils.encoding import force_text
 from django.utils.text import camel_case_to_spaces
 from django.utils.translation import ugettext_lazy as _
 
 from safespace.settings import get_exception_classes
-
-try:
-    from django.utils.deprecation import MiddlewareMixin
-except ImportError:  # pragma: no cover
-    #  Django < 1.9
-    MiddlewareMixin = object
 
 
 class SafespaceMiddleware(MiddlewareMixin):

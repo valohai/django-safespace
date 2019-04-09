@@ -1,7 +1,4 @@
-try:
-    from functools import lru_cache
-except ImportError:  # pragma: no cover
-    from django.utils.lru_cache import lru_cache
+from functools import lru_cache
 
 from django.conf import settings
 from django.test.signals import setting_changed
