@@ -1,6 +1,7 @@
 import json
 
 import pytest
+
 from django.db.utils import DatabaseError
 
 
@@ -8,7 +9,8 @@ from django.db.utils import DatabaseError
 @pytest.mark.parametrize('ajax', (False, True))
 def test_basic_usage(client, code, ajax):
     response = client.get(
-        '/problem/', {'code': ('oops' if code else '')},
+        '/problem/',
+        {'code': ('oops' if code else '')},
         HTTP_X_REQUESTED_WITH=('XMLHttpRequest' if ajax else 'An Unicorn'),
     )
     assert response.status_code == 406
@@ -65,18 +67,12 @@ def test_custom_template(client, settings):
     """
     Test that SAFESPACE_TEMPLATE_NAMES can be used for customization.
     """
-    response = client.get('/problem/', {
-        'exc': 'problem',
-        'code': 'foo',
-    })
+    response = client.get('/problem/', {'exc': 'problem', 'code': 'foo'})
     assert response.status_code == 406
     assert b'a foo error occurred, boo' in response.content
 
 
 def test_accept_json(client):
-    response = client.get(
-        '/problem/',
-        HTTP_ACCEPT=('application/json; text/html'),
-    )
+    response = client.get('/problem/', HTTP_ACCEPT=('application/json; text/html'))
     assert response.status_code == 406
     assert json.loads(response.content.decode())['error'] == 'A woeful error'
