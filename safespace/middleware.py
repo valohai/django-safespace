@@ -7,7 +7,6 @@ from django.utils.deprecation import MiddlewareMixin
 from django.utils.encoding import force_text
 from django.utils.text import camel_case_to_spaces
 from django.utils.translation import ugettext_lazy as _
-
 from safespace.settings import get_exception_classes
 
 
@@ -38,10 +37,7 @@ class SafespaceMiddleware(MiddlewareMixin):
         :type exception: Exception
         :return:
         """
-        return any(
-            isinstance(exception, klass)
-            for klass in get_exception_classes()
-        )
+        return any(isinstance(exception, klass) for klass in get_exception_classes())
 
     def respond_to_exception(self, request, exception):
         """
@@ -75,8 +71,7 @@ class SafespaceMiddleware(MiddlewareMixin):
         else:
             response = render(
                 request=request,
-                template_name=self.get_template_names(
-                    request, exception, context),
+                template_name=self.get_template_names(request, exception, context),
                 context=context,
                 status=status,
                 using=getattr(settings, 'SAFESPACE_TEMPLATE_ENGINE', None),
@@ -117,10 +112,9 @@ class SafespaceMiddleware(MiddlewareMixin):
         """
         return [
             template_name.format(**context)
-            for template_name
-            in getattr(settings, 'SAFESPACE_TEMPLATE_NAMES', [
-                'safespace/problem.html',
-            ])
+            for template_name in getattr(
+                settings, 'SAFESPACE_TEMPLATE_NAMES', ['safespace/problem.html']
+            )
         ]
 
     def get_context(self, request, exception):
@@ -138,8 +132,7 @@ class SafespaceMiddleware(MiddlewareMixin):
         :rtype: dict[str, object]
         """
         resolver_match = getattr(request, 'resolver_match', None)
-        exc_type = camel_case_to_spaces(exception.__class__.__name__) \
-            .replace(' ', '_')
+        exc_type = camel_case_to_spaces(exception.__class__.__name__).replace(' ', '_')
         env = {
             'exception': exception,
             'message': force_text(exception),

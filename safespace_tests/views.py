@@ -1,16 +1,11 @@
 from django.db import DatabaseError
 from django.http import Http404, HttpResponse
-
 from safespace.excs import Problem
 from safespace_tests.excs import CustomError
 
 
 def problem_view(request):
-    raise Problem(
-        'A woeful error',
-        title='Oh no!',
-        code=request.GET.get('code'),
-    )
+    raise Problem('A woeful error', title='Oh no!', code=request.GET.get('code'))
 
 
 def custom_error_view(request):

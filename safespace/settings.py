@@ -18,15 +18,9 @@ def get_exception_classes():
     :type: set[class]
     """
     class_names = getattr(
-        settings,
-        'SAFESPACE_EXCEPTION_CLASSES',
-        DEFAULT_EXCEPTION_CLASSES
+        settings, 'SAFESPACE_EXCEPTION_CLASSES', DEFAULT_EXCEPTION_CLASSES
     )
-    classes = [
-        import_string(class_name)
-        for class_name
-        in class_names
-    ]
+    classes = [import_string(class_name) for class_name in class_names]
     return set(classes)
 
 
