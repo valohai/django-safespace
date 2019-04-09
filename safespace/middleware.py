@@ -57,28 +57,31 @@ class SafespaceMiddleware(MiddlewareMixin):
             return response
 
         context = self.get_context(request, exception)
+
         response_type = self.determine_response_type(request, exception)
+        response_renderer = getattr(self, 'get_%s_response' % response_type)
         status = self.get_response_status(request, exception)
-        if response_type == 'json':
-            response = JsonResponse(
-                {
-                    'code': context['code'],
-                    'error': context['message'],
-                    'title': context['title'],
-                },
-                status=status,
-            )
-        else:
-            response = render(
-                request=request,
-                template_name=self.get_template_names(request, exception, context),
-                context=context,
-                status=status,
-                using=getattr(settings, 'SAFESPACE_TEMPLATE_ENGINE', None),
-            )
+        response = response_renderer(request, exception, context, status)
         if context['code']:
             response['X-Error-Code'] = context['code']
         return response
+
+    def get_html_response(self, request, exception, context, status):
+        return render(
+            request=request,
+            template_name=self.get_template_names(request, exception, context),
+            context=context,
+            using=getattr(settings, 'SAFESPACE_TEMPLATE_ENGINE', None),
+            status=status,
+        )
+
+    def get_json_response(self, request, exception, context, status):
+        content = {
+            'code': context['code'],
+            'error': context['message'],
+            'title': context['title'],
+        }
+        return JsonResponse(content, status=status)
 
     def get_response_status(self, request, exception):
         """
