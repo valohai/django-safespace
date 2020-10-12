@@ -8,8 +8,8 @@ An exception handling middleware for Django.
 
 ## Requirements
 
-* Django 2.0+
-* Python 3
+* Django 2.2+ or 3.0+
+* Python 3.6+
 
 ## Installation
 
