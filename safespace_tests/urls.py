@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 from safespace_tests.views import (
     custom_error_view,
     database_error_view,
@@ -8,9 +8,9 @@ from safespace_tests.views import (
 )
 
 urlpatterns = [
-    url('^problem/$', problem_view),
-    url('^custom/$', custom_error_view),
-    url('^db/$', database_error_view),
-    url('^404/$', four_oh_four_view),
-    url('^exception-response/$', exception_response_view),
+    re_path('^problem/$', problem_view),
+    re_path('^custom/$', custom_error_view),
+    re_path('^db/$', database_error_view),
+    re_path('^404/$', four_oh_four_view),
+    re_path('^exception-response/$', exception_response_view),
 ]
