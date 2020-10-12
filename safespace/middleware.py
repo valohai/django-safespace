@@ -4,9 +4,9 @@ from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.deprecation import MiddlewareMixin
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.text import camel_case_to_spaces
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from safespace.settings import get_exception_classes
 
 
@@ -138,7 +138,7 @@ class SafespaceMiddleware(MiddlewareMixin):
         exc_type = camel_case_to_spaces(exception.__class__.__name__).replace(' ', '_')
         env = {
             'exception': exception,
-            'message': force_text(exception),
+            'message': force_str(exception),
             'code': getattr(exception, 'code', None),
             'title': (getattr(exception, 'title', None) or _('Error')),
             'exc_type': exc_type,
@@ -163,7 +163,8 @@ class SafespaceMiddleware(MiddlewareMixin):
         :return: type string
         :rtype: str
         """
-        if request.is_ajax():
+        # Simulate `request.is_ajax()
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return 'json'
         if 'application/json' in request.META.get('HTTP_ACCEPT', ''):
             # Nb: this does not take different q= values into account,
