@@ -1,5 +1,6 @@
 SECRET_KEY = 'safespace'
 ROOT_URLCONF = 'safespace_tests.urls'
+USE_TZ = True
 
 INSTALLED_APPS = ('safespace', 'safespace_tests')
 
