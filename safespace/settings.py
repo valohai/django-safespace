@@ -13,9 +13,7 @@ DEFAULT_EXCEPTION_CLASSES = [
 
 @lru_cache()
 def get_exception_classes() -> Set[Type[Exception]]:
-    """
-    Get the set of exceptions the middleware should handle from the settings.
-    """
+    """Get the set of exceptions the middleware should handle from the settings."""
     class_names = getattr(
         settings, 'SAFESPACE_EXCEPTION_CLASSES', DEFAULT_EXCEPTION_CLASSES
     )

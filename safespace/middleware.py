@@ -28,7 +28,6 @@ class SafespaceMiddleware(MiddlewareMixin):
         :param exception: The exception that occurred
         :return: Response, maybe
         """
-
         if self.should_handle_exception(request, exception):
             return self.respond_to_exception(request, exception)
         return None
@@ -54,7 +53,6 @@ class SafespaceMiddleware(MiddlewareMixin):
         :param exception: The exception that occurred
         :return: Response
         """
-
         # If the exception has a `response`, return that.
         response = getattr(exception, 'response', None)
         if response and isinstance(response, HttpResponse):
@@ -81,6 +79,7 @@ class SafespaceMiddleware(MiddlewareMixin):
         context: ContextDict,
         status: int,
     ) -> HttpResponse:
+        """Get a HTML response for a given request, exception, and context."""
         return render(
             request=request,
             template_name=self.get_template_names(request, exception, context),
@@ -96,6 +95,7 @@ class SafespaceMiddleware(MiddlewareMixin):
         context: ContextDict,
         status: int,
     ) -> JsonResponse:
+        """Get a JSON response for a given request, exception, and context."""
         content = {
             'code': context['code'],
             'error': context['message'],
@@ -112,7 +112,6 @@ class SafespaceMiddleware(MiddlewareMixin):
         :param request: Django request that caused the exception
         :param exception: The exception that occurred
         """
-
         return getattr(settings, 'SAFESPACE_HTTP_STATUS', 406)
 
     def get_template_names(
