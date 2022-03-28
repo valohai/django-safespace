@@ -1,5 +1,6 @@
 from django.db import DatabaseError
 from django.http import Http404, HttpResponse
+
 from safespace.excs import Problem
 from safespace_tests.excs import CustomError
 

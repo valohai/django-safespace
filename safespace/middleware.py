@@ -5,6 +5,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.utils.encoding import force_str
 from django.utils.text import camel_case_to_spaces
 from django.utils.translation import gettext_lazy as _
+
 from safespace.settings import get_exception_classes
 
 
