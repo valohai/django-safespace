@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Set, Type
 
 from django.conf import settings
 from django.test.signals import setting_changed
@@ -11,11 +12,9 @@ DEFAULT_EXCEPTION_CLASSES = [
 
 
 @lru_cache()
-def get_exception_classes():
+def get_exception_classes() -> Set[Type[Exception]]:
     """
     Get the set of exceptions the middleware should handle from the settings.
-
-    :type: set[class]
     """
     class_names = getattr(
         settings, 'SAFESPACE_EXCEPTION_CLASSES', DEFAULT_EXCEPTION_CLASSES
@@ -24,7 +23,7 @@ def get_exception_classes():
     return set(classes)
 
 
-def _uncache_settings(sender, **kwargs):  # pragma: no cover
+def _uncache_settings(sender, **kwargs) -> None:  # type: ignore[no-untyped-def]  # pragma: no cover  # noqa:E501
     get_exception_classes.cache_clear()
 
 
