@@ -18,6 +18,8 @@ jobs:
             DJANGO: Django~=3.0.0
           - python-version: '3.6'
             DJANGO: Django~=3.1.0
+          - python-version: '3.8'
+            DJANGO: Django~=4.0.0
     steps:
       - name: 'Set up Python ${{ matrix.python-version }}'
         uses: actions/setup-python@v2
