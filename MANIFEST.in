@@ -1,1 +1,1 @@
-recursive-include safespace *.html
+recursive-include safespace *.html py.typed
