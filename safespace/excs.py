@@ -19,7 +19,7 @@ class Problem(Exception):
         :param code: An optional machine-readable error code.
         :param title: An optional title for the error.
         """
-        super(Problem, self).__init__(message)
+        super().__init__(message)
         if code:
             self.code = code
         if title:

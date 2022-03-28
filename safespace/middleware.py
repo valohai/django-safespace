@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -59,7 +57,7 @@ class SafespaceMiddleware(MiddlewareMixin):
         context = self.get_context(request, exception)
 
         response_type = self.determine_response_type(request, exception)
-        response_renderer = getattr(self, 'get_%s_response' % response_type)
+        response_renderer = getattr(self, f'get_{response_type}_response')
         status = self.get_response_status(request, exception)
         response = response_renderer(request, exception, context, status)
         if context['code']:
