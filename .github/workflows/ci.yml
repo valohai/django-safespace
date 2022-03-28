@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: '${{ matrix.python-version }}'
       - uses: actions/checkout@v2
-      - run: pip install -U pip pytest>=3.0.0
+      - run: pip install -U pip
       - run: 'pip install $DJANGO -e .[dev]'
         env:
           DJANGO: '${{ matrix.DJANGO }}'
