@@ -1,7 +1,6 @@
 import json
 
 import pytest
-
 from django.db.utils import DatabaseError
 
 

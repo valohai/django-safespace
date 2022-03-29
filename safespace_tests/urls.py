@@ -1,4 +1,5 @@
 from django.urls import re_path
+
 from safespace_tests.views import (
     custom_error_view,
     database_error_view,
